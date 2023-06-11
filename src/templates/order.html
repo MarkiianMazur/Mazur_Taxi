@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+{% if travel_detail %}
+    <h1>{{ travel_detail['name'] }}</h1>
+    <p>You are traveling from x: {{ travel_detail['start_x'] }} y: {{ travel_detail['start_y'] }} to x: {{ travel_detail['end_x'] }} y: {{ travel_detail['end_y'] }}</p>
+    <p>Taxi model: {{ travel_detail['model'] }}</p>
+    <p>Offer for distance: {{ travel_detail['offer'] }}%</p>
+    <p>Offer for total money spend: {{ travel_detail['pas_offer'] }}%</p>
+    <p>Distance: {{ travel_detail['distance'] }} km</p>
+    <p>Price: {{ travel_detail['price'] }}$</p>
+    <p>Passnger total spend: {{ travel_detail['cost'] }}$</p>
+    <form method="post" action="/order" class="form">
+        <button type="submit" name="t" value="{{ travel_detail['taxi_id'] }}">Confirm your arrival</button>
+    </form>
+{% else %}
+    <p>No taxi available!</p>
+{% endif %}
+</body>
+</html>

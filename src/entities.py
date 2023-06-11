@@ -6,16 +6,17 @@ class Passenger:
 
 
 class Taxi:
-    def __init__(self, id, model, position_x, position_y, available):
+    def __init__(self, id, model, position_x, position_y, available, ppk):
         self.id = id
         self.model = model
         self.position_x = position_x
         self.position_y = position_y
+        self.ppk = ppk
         self.available = available
 
 
 class Order:
-    def __init__(self, id, passenger_id, taxi_id, start_x, start_y, end_x, end_y, cost):
+    def __init__(self, id, passenger_id, taxi_id, start_x, start_y, end_x, end_y, distance, cost):
         self.id = id
         self.passenger_id = passenger_id
         self.taxi_id = taxi_id
@@ -23,12 +24,13 @@ class Order:
         self.start_y = start_y
         self.end_x = end_x
         self.end_y = end_y
+        self.distance = distance
         self.cost = cost
 
 
 class Offer:
-    def __init__(self, id, distance_min, distance_max, cost):
+    def __init__(self, id, distance_min, distance_max, percent):
         self.id = id
         self.distance_min = distance_min
         self.distance_max = distance_max
-        self.cost = cost
+        self.percent = percent

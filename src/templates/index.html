@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<form action="" method="post" class="form">
+    <div class="form">
+        <label>Enter your name: </label>
+        <input type="text" name="name" id="name" required>
+    </div>
+    <div>
+        <label>Map X: 0-100 Y: 0-100</label>
+    </div>
+    <div class="form">
+        <label>Enter current x: </label>
+        <input type="number" name="sx" id="sx" required min="0" max="100">
+    </div>
+    <div class="form">
+        <label>Enter current y: </label>
+        <input type="number" name="sy" id="sy" required min="0" max="100">
+    </div>
+    <div class="form">
+        <label>Enter destination x: </label>
+        <input type="number" name="ex" id="ex" required min="0" max="100">
+    </div>
+    <div class="form">
+        <label>Enter destination y: </label>
+        <input type="number" name="ey" id="ey" required min="0" max="100">
+    </div>
+    <div class="form">
+        <label for="model">Choose model: </label>
+        <select name="model" id="model">
+            {% for taxi in taxies %}
+            <option value="{{ taxi[0] }}">{{ taxi[0] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form">
+        <input type="submit" value="Find taxi">
+    </div>
+</form>
+</body>
+</html>
