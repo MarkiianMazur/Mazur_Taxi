@@ -4,6 +4,10 @@
 Для запуску програми необхідно:
 Встановити Python 3.10 та виконати наступні команди:
 ```shell
+pip install -r requirements.txt
+```
+
+```shell
 from src.models import *
 connection.get_database().create_tables([Passenger, Taxi, Order, Offer])
 ```
