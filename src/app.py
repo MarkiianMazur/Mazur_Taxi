@@ -1,35 +1,32 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-from entities import Passenger, Taxi, Order, Offer
-from dao_imp import PostgreSQLPassengerDAO, PostgreSQLTaxiDAO, PostgreSQLOrderDAO, PostgreSQLOfferDAO
-from services import travel
+from flask import Flask, render_template, request, redirect, url_for
+from models import *
+from services import Services
 
 app = Flask(__name__)
+
+services = Services()
 
 
 @app.get('/')
 def index_get():
-    taxi_dao = PostgreSQLTaxiDAO()
-    taxies = taxi_dao.get_models()
-    return render_template('index.html', title='Taxi Service', taxies=taxies)
+    models = services.get_taxi_models()
+    return render_template('index.html', title='Taxi Service', models=models)
 
 
 @app.post('/')
 def index_post():
-    print(request.form)
-    passenger_dao = PostgreSQLPassengerDAO()
-    passenger = Passenger(None, request.form['name'], None)
-    passenger = passenger_dao.create(passenger)
-    taxi_dao = PostgreSQLTaxiDAO()
-    taxi = taxi_dao.get_nearest_available_taxi(request.form['sx'], request.form['sy'], request.form['model'])
+    passenger = Passenger(name=request.form['name'])
+    passenger = services.create_passenger(passenger)
+    taxi = services.get_nearest_taxi(start_x=float(request.form['sx']), start_y=float(request.form['sy']),
+                                     model=request.form['model'])
     if taxi:
-        travel_detail = travel(passenger, taxi, float(request.form['sx']), float(request.form['sy']),
-                               float(request.form['ex']), float(request.form['ey']))
+        travel_detail = services.travel(passenger.id, taxi.id, float(request.form['sx']), float(request.form['sy']),
+                                        float(request.form['ex']), float(request.form['ey']))
         taxi.available = False
-        taxi_dao.update(taxi)
-        order_dao = PostgreSQLOrderDAO()
-        order = Order(None, passenger.id, taxi.id, request.form['sx'], request.form['sy'], request.form['ex'],
+        services.update_taxi(taxi)
+        order = Order(passenger.id, taxi.id, request.form['sx'], request.form['sy'], request.form['ex'],
                       request.form['ey'], travel_detail['distance'], travel_detail['price'])
-        order_dao.create(order)
+        # order.save()
         travel_detail['model'] = taxi.model
         travel_detail['name'] = passenger.name
         travel_detail['cost'] = passenger.total_cost
@@ -49,9 +46,7 @@ def order_get():
 
 @app.post('/order')
 def order_post():
-    print(request.form)
-    taxi_dao = PostgreSQLTaxiDAO()
-    taxi = taxi_dao.read(request.form['t'])
+    taxi = services.get_taxi_by_id(int(request.form['t']))
     taxi.available = True
-    taxi_dao.update(taxi)
+    services.update_taxi(taxi)
     return redirect(url_for('index_get'))
